@@ -2,57 +2,57 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt')
 
 const distributorSchema = new mongoose.Schema({
-    distributorEntityName : {
-        type : String,
+    distributorEntityName: {
+        type: String,
     },
     constitutionEntity: {
-        type : String,
+        type: String,
     },
     address: {
-        type : String,
+        type: String,
     },
     city: {
-        type : String,
+        type: String,
     },
     state: {
-        type : String,
+        type: String,
     },
     pincode: {
-        type : String,
+        type: String,
     },
     location: {
-        type : String,
+        type: String,
     },
     gstNo: {
-        type : String,
+        type: String,
     },
     panNo: {
-        type : String,
+        type: String,
     },
     FSSAINo: {
-        type : String,
+        type: String,
     },
     ownerName: [{
-        type : String,
+        type: String,
     }],
     phoneNo: {
-        type : Number,
+        type: Number,
         unique: true
     },
     alternatePhoneNo: {
-        type : Number,
+        type: Number,
     },
     email: {
-        type : String,
+        type: String,
     },
     associatedCompany: {
-        type : String,
+        type: String,
     },
     coverageArea: [{
-        type : String,
+        type: String,
     }],
     coverageAreaDescription: [{
-        type : String,
+        type: String,
     }],
     startingYear: {
         type: Date,
@@ -129,16 +129,16 @@ const distributorSchema = new mongoose.Schema({
     memberOfAssociation: [{
         type: String,
     }],
-    noOfAssociation:{
+    noOfAssociation: {
         type: Number,
     },
-    noOfMember:{
+    noOfMember: {
         type: Number,
     },
-    typeOfBusinessAssociation:[{
+    typeOfBusinessAssociation: [{
         type: String,
     }],
-    officeAndGodownImage:[{
+    officeAndGodownImage: [{
         url: {
             type: String
         },

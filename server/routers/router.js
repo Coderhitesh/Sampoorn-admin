@@ -17,8 +17,9 @@ const fileUpload = upload.fields([
     { name: 'partner2Image', maxCount: 1 },
     { name: 'anyOtherDocImage', maxCount: 1 },
 ]);
+const fileUploadAny = upload.any();
 
-router.post("/create_distributor", fileUpload, createDistributor);
+router.post("/create_distributor", fileUploadAny, createDistributor);
 router.get('/get_distributor', getDistributors);
 router.get('/get_distributor_by_id/:id', getSingleDistributor);
 router.delete('/delete_form/:id', deleteForm);

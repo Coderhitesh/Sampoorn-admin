@@ -6,6 +6,11 @@ const SendEmail = require("../Utils/SendEmail")
 exports.createDistributor = async (req, res) => {
     const uploadedImages = [];
     try {
+        console.log("=== CREATE DISTRIBUTOR REQUEST ===");
+        console.log("Request Body:", req.body);
+        console.log("Request Files:", req.files);
+        console.log("Files Array Length:", req.files ? req.files.length : 0);
+
         const {
             distributorEntityName,
             constitutionEntity,
@@ -52,60 +57,44 @@ exports.createDistributor = async (req, res) => {
             Password
         } = req.body;
 
+        console.log("Extracted phoneNo:", phoneNo);
+        console.log("Extracted type:", type);
+        console.log("Extracted Password:", Password);
+
         const emptyFields = [];
-        // if (!distributorEntityName) emptyFields.push("distributorEntityName");
-        // if (!constitutionEntity) emptyFields.push("constitutionEntity");
-        // if (!address) emptyFields.push("address");
-        // if (!city) emptyFields.push("city");
-        // if (!state) emptyFields.push("state");
-        // if (!pincode) emptyFields.push("pincode");
-        // if (!location) emptyFields.push("location");
-        // if (!gstNo) emptyFields.push("gstNo");
-        // if (!panNo) emptyFields.push("panNo");
-        // if (!FSSAINo) emptyFields.push("FSSAINo");
-        // if (!ownerName) emptyFields.push("ownerName");
         if (!phoneNo) emptyFields.push("phoneNo");
-        // if (!alternatePhoneNo) emptyFields.push("alternatePhoneNo");
-        // if (!email) emptyFields.push("email");
-        // if (!associatedCompany) emptyFields.push("associatedCompany");
-        // if (!coverageArea) emptyFields.push("coverageArea");
-        // if (!coverageAreaDescription) emptyFields.push("coverageAreaDescription");
-        // if (!startingYear) emptyFields.push("startingYear");
-        // if (!numberOfCustomers) emptyFields.push("numberOfCustomers");
-        // if (!godownArea) emptyFields.push("godownArea");
-        // if (!noOfEmployees) emptyFields.push("noOfEmployees");
-        // if (!noOfVehicles) emptyFields.push("noOfVehicles");
-        // if (!typeOfVehicles) emptyFields.push("typeOfVehicles");
-        // if (!monthlyTurnOver) emptyFields.push("monthlyTurnOver");
-        // if (!channelsOfOperation) emptyFields.push("channelsOfOperation");
-        // if (!typesOfOperation) emptyFields.push("typesOfOperation");
-        // if (!businessOperations) emptyFields.push("businessOperations");
-        // if (!isERPUsed) emptyFields.push("isERPUsed");
-        // if (!distributorAssociationName) emptyFields.push("distributorAssociationName");
-        if (!type) emptyFields.push("type");
+        // if (!type) emptyFields.push("type");
+
+        console.log("Empty fields:", emptyFields);
 
         if (emptyFields.length > 0) {
+            console.log("Validation failed - missing required fields");
             return res.status(400).json({
                 success: false,
                 message: `Please fill in the following fields: ${emptyFields.join(", ")}`,
-            })
+            });
         }
 
+        console.log("Checking for existing distributor with phoneNo:", phoneNo.trim());
         const existingDistributor = await Distributor.findOne({ phoneNo: phoneNo.trim() });
         if (existingDistributor) {
+            console.log("Distributor already exists with this phone number");
             return res.status(400).json({
                 success: false,
                 message: "A distributor with this phone number already exists",
             });
         }
 
-        if (Password < 8) {
+        console.log("Password validation - length:", Password ? Password.length : 0);
+        if (!Password || Password.length < 8) {
+            console.log("Password validation failed");
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 8 characters long",
-            })
+            });
         }
 
+        console.log("Creating distributor in database...");
         const distributor = await Distributor.create({
             distributorEntityName,
             constitutionEntity,
@@ -118,8 +107,8 @@ exports.createDistributor = async (req, res) => {
             panNo,
             FSSAINo,
             ownerName,
-            phoneNo,
-            alternatePhoneNo,
+            phoneNo:Number(phoneNo),
+            alternatePhoneNo:Number(alternatePhoneNo),
             email,
             associatedCompany,
             coverageArea,
@@ -152,12 +141,37 @@ exports.createDistributor = async (req, res) => {
             Password
         });
 
-        if (req.files) {
-            const { officeAndGodownImage, gstImage, fssaiImage, partner1Image, partner2Image, anyOtherDocImage } = req.files;
-            if (officeAndGodownImage) {
+        console.log("Distributor created successfully with ID:", distributor._id);
+
+        // Handle file uploads if files are present
+        if (req.files && req.files.length > 0) {
+            console.log("Processing file uploads...");
+            
+            // Group files by fieldname
+            const fileGroups = {};
+            req.files.forEach(file => {
+                console.log(`Processing file: ${file.fieldname} - ${file.originalname}`);
+                
+                // Handle array notation in fieldname (e.g., "officeAndGodownImage[0]")
+                let fieldName = file.fieldname;
+                if (fieldName.includes('[')) {
+                    fieldName = fieldName.split('[')[0];
+                }
+                
+                if (!fileGroups[fieldName]) {
+                    fileGroups[fieldName] = [];
+                }
+                fileGroups[fieldName].push(file);
+            });
+
+            console.log("File groups:", Object.keys(fileGroups));
+
+            // Handle officeAndGodownImage (multiple images)
+            if (fileGroups.officeAndGodownImage) {
+                console.log("Uploading office and godown images...");
                 try {
                     const uploadedImages = await uploadMultipleImages(
-                        officeAndGodownImage.map((file) => file.path)
+                        fileGroups.officeAndGodownImage.map((file) => file.path)
                     );
 
                     const result = uploadedImages.map((image) => {
@@ -165,137 +179,76 @@ exports.createDistributor = async (req, res) => {
                         return {
                             url: image.image,
                             public_id: image.public_id
-                        }
-                    })
-                    distributor.officeAndGodownImage = result
+                        };
+                    });
+                    
+                    distributor.officeAndGodownImage = result;
+                    console.log("Office and godown images uploaded successfully");
 
                 } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
+                    console.log("Error uploading office and godown images:", error);
+                    return res.status(500).json({
                         success: false,
-                        message: "Internal server error",
+                        message: "Error uploading office and godown images",
                         error: error.message
-                    })
+                    });
                 }
             }
 
-            if (gstImage) {
-                try {
-                    const uploadImage = await uploadSingleImage(gstImage[0].path)
-                    uploadedImages.push(uploadImage.public_id);
+            // Handle single image uploads
+            const singleImageFields = ['gstImage', 'fssaiImage', 'partner1Image', 'partner2Image', 'anyOtherDocImage'];
+            
+            for (const fieldName of singleImageFields) {
+                if (fileGroups[fieldName] && fileGroups[fieldName].length > 0) {
+                    console.log(`Uploading ${fieldName}...`);
+                    try {
+                        const uploadImage = await uploadSingleImage(fileGroups[fieldName][0].path);
+                        uploadedImages.push(uploadImage.public_id);
 
-                    distributor.gstImage = {
-                        url: uploadImage.image,
-                        public_id: uploadImage.public_id
+                        distributor[fieldName] = {
+                            url: uploadImage.image,
+                            public_id: uploadImage.public_id
+                        };
+                        
+                        console.log(`${fieldName} uploaded successfully`);
+
+                    } catch (error) {
+                        console.log(`Error uploading ${fieldName}:`, error);
+                        return res.status(500).json({
+                            success: false,
+                            message: `Error uploading ${fieldName}`,
+                            error: error.message
+                        });
                     }
-
-                } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
-                        success: false,
-                        message: "Internal server error",
-                        error: error.message
-                    })
                 }
             }
-
-            if (fssaiImage) {
-                try {
-                    const uploadImage = await uploadSingleImage(fssaiImage[0].path)
-                    uploadedImages.push(uploadImage.public_id);
-
-                    distributor.fssaiImage = {
-                        url: uploadImage.image,
-                        public_id: uploadImage.public_id
-                    }
-
-                } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
-                        success: false,
-                        message: "Internal server error",
-                        error: error.message
-                    })
-                }
-            }
-
-            if (partner1Image) {
-                try {
-                    const uploadImage = await uploadSingleImage(partner1Image[0].path)
-                    uploadedImages.push(uploadImage.public_id);
-
-                    distributor.partner1Image = {
-                        url: uploadImage.image,
-                        public_id: uploadImage.public_id
-                    }
-
-                } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
-                        success: false,
-                        message: "Internal server error",
-                        error: error.message
-                    })
-                }
-            }
-
-            if (partner2Image) {
-                try {
-                    const uploadImage = await uploadSingleImage(partner2Image[0].path)
-                    uploadedImages.push(uploadImage.public_id);
-
-                    distributor.partner2Image = {
-                        url: uploadImage.image,
-                        public_id: uploadImage.public_id
-                    }
-
-                } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
-                        success: false,
-                        message: "Internal server error",
-                        error: error.message
-                    })
-                }
-            }
-
-            if (anyOtherDocImage) {
-                try {
-                    const uploadImage = await uploadSingleImage(anyOtherDocImage[0].path)
-                    uploadedImages.push(uploadImage.public_id);
-
-                    distributor.anyOtherDocImage = {
-                        url: uploadImage.image,
-                        public_id: uploadImage.public_id
-                    }
-
-                } catch (error) {
-                    console.log("Internal server error", error)
-                    res.status(500).json({
-                        success: false,
-                        message: "Internal server error",
-                        error: error.message
-                    })
-                }
-            }
-
+        } else {
+            console.log("No files to upload");
         }
 
+        console.log("Saving distributor with uploaded images...");
         await distributor.save();
 
+        console.log("Distributor creation completed successfully");
         return res.status(200).json({
             success: true,
             message: "Distributor created successfully",
             data: distributor
-        })
+        });
 
     } catch (error) {
-        console.log("Internal server error", error)
+        console.log("=== ERROR IN CREATE DISTRIBUTOR ===");
+        console.log("Error message:", error.message);
+        console.log("Error stack:", error.stack);
+        console.log("Uploaded images to cleanup:", uploadedImages);
 
+        // Cleanup uploaded images if there was an error
         if (uploadedImages.length > 0) {
+            console.log("Cleaning up uploaded images...");
             try {
                 for (const public_id of uploadedImages) {
                     await cloudinary.uploader.destroy(public_id);
+                    console.log(`Deleted image with public_id: ${public_id}`);
                 }
                 console.log("All uploaded files have been deleted.");
             } catch (deleteError) {
@@ -303,13 +256,13 @@ exports.createDistributor = async (req, res) => {
             }
         }
 
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Internal server error",
             error: error.message
-        })
+        });
     }
-}
+};
 
 exports.login = async (req, res) => {
     try {
