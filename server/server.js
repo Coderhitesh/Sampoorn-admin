@@ -27,7 +27,7 @@ app.post('/admin-login', (req, res) => {
     console.log(req.body)
     const { email, password } = req.body;
     const defaultEmail = process.env.ADMIN_EMAIL || "admin@gmail.com"
-    const defaultPassword = process.env.ADMIN_PASSWORD || "upfda@admin";
+    const defaultPassword = process.env.ADMIN_PASSWORD || "sampoorna@admin";
 
     console.log(defaultEmail)
     if (email === defaultEmail && password === defaultPassword) {
