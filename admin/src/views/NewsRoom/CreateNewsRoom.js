@@ -34,7 +34,7 @@ const CreateNewsRoom = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5001/api/v1/create_news', { title, url });
+            const response = await axios.post('https://api.sampoornmarketing.com/api/v1/create_news', { title, url });
             toast.success(response.data.message || 'NewsRoom created successfully!');
             setFormData({ title: '', url: '' }); // Reset the form
         } catch (error) {

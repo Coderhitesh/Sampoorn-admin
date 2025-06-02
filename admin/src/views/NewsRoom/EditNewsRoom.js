@@ -19,7 +19,7 @@ const EditNewsRoom = () => {
     const fetchNewsRoomDetails = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get(`http://localhost:5001/api/v1/get_single_news/${id}`);
+            const { data } = await axios.get(`https://api.sampoornmarketing.com/api/v1/get_single_news/${id}`);
             setFormData({
                 title: data.data.title,
                 url: data.data.url,
@@ -57,7 +57,7 @@ const EditNewsRoom = () => {
 
         setLoading(true);
         try {
-            const response = await axios.put(`http://localhost:5001/api/v1/update_news/${id}`, { title, url });
+            const response = await axios.put(`https://api.sampoornmarketing.com/api/v1/update_news/${id}`, { title, url });
             toast.success(response.data.message || 'NewsRoom updated successfully!');
             navigate('#/news-room/all-news-room'); // Redirect to the list page after update
         } catch (error) {

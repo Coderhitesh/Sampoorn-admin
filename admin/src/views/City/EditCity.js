@@ -17,7 +17,7 @@ const EditCity = () => {
     const fetchCityDetails = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get(`http://localhost:5001/api/v1/get_location/${id}`);
+            const { data } = await axios.get(`https://api.sampoornmarketing.com/api/v1/get_location/${id}`);
             setFormData({ name: data.data.name }); // Assuming data contains the city's name
         } catch (error) {
             console.error('Error fetching city details:', error);
@@ -52,7 +52,7 @@ const EditCity = () => {
 
         setLoading(true);
         try {
-            const response = await axios.put(`http://localhost:5001/api/v1/update_location/${id}`, { name });
+            const response = await axios.put(`https://api.sampoornmarketing.com/api/v1/update_location/${id}`, { name });
             toast.success(response.data.message || 'City updated successfully!');
             navigate('/location/all-location'); // Redirect to the list page after update
         } catch (error) {

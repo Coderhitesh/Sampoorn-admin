@@ -23,7 +23,7 @@ function AllHero() {
     const handleFetchHeroes = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_banners');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_banners');
             setHeroes(data.data);
         } catch (error) {
             console.log('Error fetching Banners:', error);
@@ -36,7 +36,7 @@ function AllHero() {
     const handleUpdateStatus = async (id, currentStatus) => {
         try {
             const updatedStatus = !currentStatus;
-            await axios.put(`http://localhost:5001/api/v1/update_status/${id}`, {
+            await axios.put(`https://api.sampoornmarketing.com/api/v1/update_status/${id}`, {
                 isActive: updatedStatus,
             });
 
@@ -56,7 +56,7 @@ function AllHero() {
     const handleDeleteHero = async (id) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:5001/api/v1/delete_banner/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_banner/${id}`);
             setHeroes((prevHeroes) => prevHeroes.filter((hero) => hero._id !== id));
             toast.success('Banner deleted successfully');
         } catch (error) {

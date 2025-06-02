@@ -22,7 +22,7 @@ const AllCity = () => {
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_locations');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_locations');
             setLocations(data.data); // Assuming data is returned in the `data` field
         } catch (error) {
             console.error('Error fetching locations:', error);
@@ -40,7 +40,7 @@ const AllCity = () => {
     const handleDeleteLocation = async (id) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:5001/api/v1/delete_location/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_location/${id}`);
             setLocations((prevLocations) => prevLocations.filter((location) => location._id !== id));
             toast.success('Location deleted successfully');
         } catch (error) {

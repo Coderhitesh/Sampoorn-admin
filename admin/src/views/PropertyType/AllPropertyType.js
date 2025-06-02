@@ -22,7 +22,7 @@ const AllPropertyType = () => {
     const fetchPropertyTypes = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_propertyTypes');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_propertyTypes');
             setPropertyTypes(data.data); // Assuming data is returned in the `data` field
         } catch (error) {
             console.error('Error fetching property types:', error);
@@ -40,7 +40,7 @@ const AllPropertyType = () => {
     const handleDeletePropertyType = async (id) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:5001/api/v1/delete_propertyType/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_propertyType/${id}`);
             setPropertyTypes((prevPropertyTypes) => prevPropertyTypes.filter((type) => type._id !== id));
             toast.success('Property Type deleted successfully');
         } catch (error) {

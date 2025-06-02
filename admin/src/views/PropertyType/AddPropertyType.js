@@ -29,7 +29,7 @@ const AddPropertyType = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5001/api/v1/create_propertyType', { name });
+            const response = await axios.post('https://api.sampoornmarketing.com/api/v1/create_propertyType', { name });
             toast.success(response.data.message || 'Property Type added successfully!');
             setFormData({ name: '' }); // Reset the form
         } catch (error) {

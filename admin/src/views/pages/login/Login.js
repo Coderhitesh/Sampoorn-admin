@@ -35,7 +35,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5001/admin-login', formData);
+      const res = await axios.post('https://api.sampoornmarketing.com/admin-login', formData);
       // console.log('Response:', res.data);
 
       const { login } = res.data;

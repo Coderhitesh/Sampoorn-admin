@@ -43,7 +43,7 @@ function AddBlogs() {
 
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:5001/api/v1/create_blog', payload, {
+            const res = await axios.post('https://api.sampoornmarketing.com/api/v1/create_blog', payload, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             toast.success(res.data.message);

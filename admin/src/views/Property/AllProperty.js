@@ -22,7 +22,7 @@ const AllProperty = () => {
     const fetchProperties = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_properties');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_properties');
             setProperties(data.data); // Assuming data is returned in the `data` field
         } catch (error) {
             console.error('Error fetching properties:', error);
@@ -40,7 +40,7 @@ const AllProperty = () => {
     const handleDeleteProperty = async (id, publicId) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:5001/api/v1/delete_property/${id}`, {
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_property/${id}`, {
                 data: { publicId },
             });
             setProperties((prev) => prev.filter((property) => property._id !== id));

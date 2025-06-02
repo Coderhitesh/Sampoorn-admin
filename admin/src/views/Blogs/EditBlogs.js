@@ -30,7 +30,7 @@ function EditBlogs() {
 
     const fetchBlog = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5001/api/v1/get_blog/${id}`);
+            const { data } = await axios.get(`https://api.sampoornmarketing.com/api/v1/get_blog/${id}`);
             const blog = data.data;
             setFormData({
                 title: blog.title,
@@ -63,7 +63,7 @@ function EditBlogs() {
 
         setLoading(true);
         try {
-            const res = await axios.put(`http://localhost:5001/api/v1/update_blog/${id}`, payload, {
+            const res = await axios.put(`https://api.sampoornmarketing.com/api/v1/update_blog/${id}`, payload, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             toast.success(res.data.message);

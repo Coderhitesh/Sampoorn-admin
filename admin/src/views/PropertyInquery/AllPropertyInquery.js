@@ -30,7 +30,7 @@ const AllPropertyInquiry = () => {
     const fetchPropertyInquiries = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_property_inquery');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_property_inquery');
             const allData = data.data;
             setInquiries(allData.reverse()); // Assuming data is returned in the `data` field
         } catch (error) {
@@ -49,7 +49,7 @@ const AllPropertyInquiry = () => {
     const handleDeleteInquiry = async (id) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:5001/api/v1/delete_property_inquery/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_property_inquery/${id}`);
             setInquiries((prev) => prev.filter((inquiry) => inquiry._id !== id));
             toast.success('Inquiry deleted successfully');
         } catch (error) {

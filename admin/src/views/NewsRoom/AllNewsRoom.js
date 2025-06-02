@@ -22,7 +22,7 @@ const AllNewsRoom = () => {
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('http://localhost:5001/api/v1/get_news');
+      const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_news');
       setNews(data.data);
     } catch (error) {
       console.error('Error fetching news:', error);
@@ -40,7 +40,7 @@ const AllNewsRoom = () => {
   const handleDeleteNews = async (id) => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:5001/api/v1/delete_news/${id}`);
+      await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_news/${id}`);
       setNews((prevNews) => prevNews.filter((item) => item._id !== id));
       toast.success('News deleted successfully');
     } catch (error) {

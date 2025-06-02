@@ -22,7 +22,7 @@ function AllBlogs() {
     const handleFetchBlogs = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5001/api/v1/get_blogs');
+            const { data } = await axios.get('https://api.sampoornmarketing.com/api/v1/get_blogs');
             setBlogs(data.data || []);
         } catch (error) {
             console.error('Error fetching blogs:', error);
@@ -35,7 +35,7 @@ function AllBlogs() {
     const handleDeleteBlog = async (id) => {
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:5001/api/v1/delete_blog/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_blog/${id}`);
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog._id !== id));
             toast.success('Blog deleted successfully!');
         } catch (error) {

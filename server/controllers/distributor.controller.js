@@ -548,6 +548,8 @@ exports.updateDistributor = async (req, res) => {
             noOfMember,
         } = req.body;
 
+        console.log("req.body",req.body)
+
         const distributor = await Distributor.findById(id);
         if (!distributor) {
             return res.status(404).json({

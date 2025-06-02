@@ -25,7 +25,7 @@ const Retailer = () => {
     const fetchDistributors = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5001/api/v1/get_distributor');
+            const response = await fetch('https://api.sampoornmarketing.com/api/v1/get_distributor');
             const data = await response.json();
             const reverseData = data.data.reverse();
             const distributors = reverseData.filter(distributor => distributor.type === "Retailer");
@@ -96,7 +96,7 @@ const Retailer = () => {
 
         setUploading(true);
         try {
-            const response = await axios.post('http://localhost:5001/api/v1/update_files_By_admin', formData, {
+            const response = await axios.post('https://api.sampoornmarketing.com/api/v1/update_files_By_admin', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -115,7 +115,7 @@ const Retailer = () => {
 
     const handleToggleVerification = async (id, currentStatus) => {
         try {
-            await axios.put(`http://localhost:5001/api/v1/update_verify_status/${id}`);
+            await axios.put(`https://api.sampoornmarketing.com/api/v1/update_verify_status/${id}`);
             toast.success('Verification status updated successfully');
             fetchDistributors(); // Refresh the list
         } catch (error) {
@@ -154,7 +154,7 @@ const Retailer = () => {
     const handleDeleteBlog = async (id) => {
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:5001/api/v1/delete_form/${id}`);
+            await axios.delete(`https://api.sampoornmarketing.com/api/v1/delete_form/${id}`);
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog._id !== id));
             toast.success('Deleted successfully!');
         } catch (error) {

@@ -30,7 +30,7 @@ const EditProperty = () => {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/v1/get_locations');
+                const response = await axios.get('https://api.sampoornmarketing.com/api/v1/get_locations');
                 setLocations(response.data.data || []);
             } catch (error) {
                 console.error('Error fetching locations:', error);
@@ -40,7 +40,7 @@ const EditProperty = () => {
 
         const fetchPropertyTypes = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/v1/get_propertyTypes');
+                const response = await axios.get('https://api.sampoornmarketing.com/api/v1/get_propertyTypes');
                 setPropertyTypes(response.data.data || []);
             } catch (error) {
                 console.error('Error fetching property types:', error);
@@ -50,7 +50,7 @@ const EditProperty = () => {
 
         const fetchPropertyData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/api/v1/get_property/${id}`);
+                const response = await axios.get(`https://api.sampoornmarketing.com/api/v1/get_property/${id}`);
                 const data = response.data.data;
                 console.log("response.data.data",data.status)
                 setFormData({
@@ -128,7 +128,7 @@ const EditProperty = () => {
             formDataObj.append('rating', rating);
             if (image) formDataObj.append('image', image);
 
-            const response = await axios.put(`http://localhost:5001/api/v1/update_property/${id}`, formDataObj, {
+            const response = await axios.put(`https://api.sampoornmarketing.com/api/v1/update_property/${id}`, formDataObj, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

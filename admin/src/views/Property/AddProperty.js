@@ -27,7 +27,7 @@ const AddProperty = () => {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/v1/get_locations');
+                const response = await axios.get('https://api.sampoornmarketing.com/api/v1/get_locations');
                 setLocations(response.data.data || []);
             } catch (error) {
                 console.error('Error fetching locations:', error);
@@ -37,7 +37,7 @@ const AddProperty = () => {
 
         const fetchPropertyTypes = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/api/v1/get_propertyTypes');
+                const response = await axios.get('https://api.sampoornmarketing.com/api/v1/get_propertyTypes');
                 setPropertyTypes(response.data.data || []);
             } catch (error) {
                 console.error('Error fetching property types:', error);
@@ -104,7 +104,7 @@ const AddProperty = () => {
             formDataObj.append('rating', rating);
             formDataObj.append('image', image);
 
-            const response = await axios.post('http://localhost:5001/api/v1/create_property', formDataObj, {
+            const response = await axios.post('https://api.sampoornmarketing.com/api/v1/create_property', formDataObj, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

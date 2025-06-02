@@ -17,7 +17,7 @@ const EditPropertyType = () => {
     const fetchPropertyTypeDetails = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get(`http://localhost:5001/api/v1/get_propertyType/${id}`);
+            const { data } = await axios.get(`https://api.sampoornmarketing.com/api/v1/get_propertyType/${id}`);
             setFormData({ name: data.data.name }); // Assuming the API returns the property type's name in `data`
         } catch (error) {
             console.error('Error fetching property type details:', error);
@@ -52,7 +52,7 @@ const EditPropertyType = () => {
 
         setLoading(true);
         try {
-            const response = await axios.put(`http://localhost:5001/api/v1/update_propertyType/${id}`, { name });
+            const response = await axios.put(`https://api.sampoornmarketing.com/api/v1/update_propertyType/${id}`, { name });
             toast.success(response.data.message || 'Property Type updated successfully!');
             navigate('/property-type/all-property-type'); // Redirect to the list page after update
         } catch (error) {
